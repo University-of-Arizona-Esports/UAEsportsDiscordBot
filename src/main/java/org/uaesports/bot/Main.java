@@ -2,7 +2,6 @@ package org.uaesports.bot;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
 public class Main {
@@ -17,25 +16,33 @@ public class Main {
                 .setToken(token)
                 .login().join();
 
-        // Currently registered slash commands
-        // The command info is stored on Discord's end, meaning the usage and description,
-        // and then the bot created will act as a callback. This allows us to see what discord has registered
-        // for commands currently on a global level. There are also server level slash commands.
-        var commands = api.getGlobalSlashCommands().join();
-        for (SlashCommand command : commands) {
-            System.out.println(command.getName());
-        }
+        // The classes containing callbacks for each command category
+        var pingHandler = new Ping(api);
+        var roleHandler = new Roles();
 
-        var pingHandler = new Ping();
-        var testHandler = new Test();
-
+        // The listener for when a slash command that belongs to this bot is used.
         api.addSlashCommandCreateListener(event -> {
+            // Gets the context of the command usage
             SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
+
+            // Use the command-specific callbacks to handle interactions
             var name = slashCommandInteraction.getCommandName();
-            if (name.equals("ping")) {
-                pingHandler.callback(slashCommandInteraction);
-            } else if (name.equals("test")) {
-                testHandler.callback(slashCommandInteraction);
+
+            switch (name) {
+                case "ping":
+                    pingHandler.callback(slashCommandInteraction);
+                case "roles":
+                    roleHandler.callbackRoles(slashCommandInteraction);
+            }
+        });
+
+        api.addMessageComponentCreateListener(event -> {
+            var messageComponentInteraction = event.getMessageComponentInteraction();
+            var id = messageComponentInteraction.getCustomId();
+
+            switch (id) {
+                case "roleMenu":
+                    roleHandler.callbackRoleMenu(messageComponentInteraction);
             }
         });
     }
