@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+group 'org.uaesports.com'
+version '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.javacord:javacord:3.3.2'
+}
