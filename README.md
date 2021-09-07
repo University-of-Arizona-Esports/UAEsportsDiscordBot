@@ -10,7 +10,7 @@ Setup instructions to run the project yourself.
 1) Install [Java 16+](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html)
 1) Clone the repository
 1) In IntelliJ, open the cloned folder. This should automatically detect the Gradle sources and build wrapper
-1) Create a Configuration for the [UpdateCommands](src/main/java/org.uaesports.bot/UpdateCommands.java) and [Main](src/main/java/org.uaesports.bot/Main.java) classes
+1) Create a Configuration for the [UpdateCommands](src/main/java/org/uaesports/bot/UpdateCommands.java) and [Main](src/main/java/org/uaesports/bot/Main.java) classes
 1) Make sure that the configurations have the `UADiscordBotToken` environment variables set to the bot's token value (DM `Heroicos_HM#0310` to get this if you need)
 1) You can also use your own bot token and replace the esports bot token in environment variables
 1) If you replaced the token with your own, you need to run the `UpdateCommands` configuration you made in order to register the global commands with Discord (this may take up to an hour to properly register/update)
