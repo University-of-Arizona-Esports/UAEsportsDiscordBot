@@ -8,7 +8,11 @@ import org.javacord.api.interaction.SlashCommandInteraction;
 public class Main {
     public static void main(String[] args) {
         // Get token from environment variables and log in with it.
-        var token = System.getenv("UADiscordBotTest");
+        var token = System.getenv("UADiscordBotToken");
+        if (token == null) {
+            System.err.println("TOKEN ENVIRONMENT VARIABLE NOT FOUND");
+            return;
+        }
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(token)
                 .login().join();
