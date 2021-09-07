@@ -4,6 +4,9 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
+import org.uaesports.bot.commands.Debug;
+import org.uaesports.bot.commands.Ping;
+import org.uaesports.bot.commands.Test;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,11 +35,14 @@ public class Main {
         api.addSlashCommandCreateListener(event -> {
             SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
             var name = slashCommandInteraction.getCommandName();
-            if (name.equals("ping")) {
-                pingHandler.callback(slashCommandInteraction);
-            } else if (name.equals("test")) {
-                testHandler.callback(slashCommandInteraction);
+            if (name.equals("debug")) {
+                new Debug().callback(slashCommandInteraction);
             }
+//            if (name.equals("ping")) {
+//                pingHandler.callback(slashCommandInteraction);
+//            } else if (name.equals("test")) {
+//                testHandler.callback(slashCommandInteraction);
+//            }
         });
     }
 }

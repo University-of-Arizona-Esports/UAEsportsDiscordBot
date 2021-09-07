@@ -3,6 +3,8 @@ package org.uaesports.bot;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.interaction.SlashCommandBuilder;
+import org.javacord.api.interaction.SlashCommandOption;
+import org.javacord.api.interaction.SlashCommandOptionType;
 
 import java.util.Arrays;
 
@@ -25,8 +27,21 @@ public class UpdateCommands {
         // create new slash commands or modify existing ones if the descriptions are changed.
         // NOTE: This may take some time to update on Discord's end, up to an hour or more.
         api.bulkOverwriteGlobalSlashCommands(Arrays.asList(
-                new SlashCommandBuilder().setName("ping").setDescription("A very basic ping and pong interaction."),
-                new SlashCommandBuilder().setName("test").setDescription("Just testing the thing.")
+//                new SlashCommandBuilder().setName("ping").setDescription("A very basic ping and pong interaction."),
+//                new SlashCommandBuilder().setName("test").setDescription("Just testing the thing.")
+                new SlashCommandBuilder()
+                        .setName("debug")
+                        .setDescription("Debug command thing")
+                        .setOptions(Arrays.asList(SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "get", "Get something",
+                                                                                       Arrays.asList(SlashCommandOption.create(SlashCommandOptionType.INTEGER, "a", "A"),
+                                                                                                     SlashCommandOption.create(SlashCommandOptionType.INTEGER, "b", "B"),
+                                                                                                     SlashCommandOption.create(SlashCommandOptionType.INTEGER, "c", "C"))),
+                                                  SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "set", "Set something",
+                                                                                       Arrays.asList(SlashCommandOption.create(SlashCommandOptionType.INTEGER, "a", "A"),
+                                                                                                     SlashCommandOption.create(SlashCommandOptionType.INTEGER, "b", "B"),
+                                                                                                     SlashCommandOption.create(SlashCommandOptionType.INTEGER, "c", "C")))))
         )).join();
+        
+        api.disconnect();
     }
 }
