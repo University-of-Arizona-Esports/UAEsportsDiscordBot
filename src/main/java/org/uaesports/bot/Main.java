@@ -26,9 +26,9 @@ public class Main {
             SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
 
             // Use the command-specific callbacks to handle interactions
-            var name = slashCommandInteraction.getCommandName();
-
-            switch (name) {
+            var signature = getCommandSignature(slashCommandInteraction);
+            System.out.println(signature);
+            switch (signature) {
                 case "ping":
                     pingHandler.callback(slashCommandInteraction);
                 case "roles":
@@ -36,6 +36,7 @@ public class Main {
             }
         });
 
+        // The listener for when a message component (A menu selector or a button) is used.
         api.addMessageComponentCreateListener(event -> {
             var messageComponentInteraction = event.getMessageComponentInteraction();
             var id = messageComponentInteraction.getCustomId();
@@ -45,5 +46,23 @@ public class Main {
                     roleHandler.callbackRoleMenu(messageComponentInteraction);
             }
         });
+    }
+
+    public static String getCommandSignature(SlashCommandInteraction interaction) {
+        StringBuilder signature = new StringBuilder(interaction.getCommandName());
+
+        var options = interaction.getOptions();
+        while (options.size() == 1) {
+            var option = options.get(0);
+            if (options.get(0).isSubcommandOrGroup()) {
+                signature.append(" ").append(option.getName());
+                options = option.getOptions();
+            } else {
+                return signature.toString();
+            }
+        }
+
+
+        return signature.toString();
     }
 }
