@@ -1,4 +1,4 @@
-package org.uaesports.bot.managers.cmds;
+package org.uaesports.bot.managers.cmds.annotations;
 
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;

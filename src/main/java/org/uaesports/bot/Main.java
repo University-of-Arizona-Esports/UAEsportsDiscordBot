@@ -36,7 +36,8 @@ public class Main {
             SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
             var name = slashCommandInteraction.getCommandName();
             if (name.equals("debug")) {
-                new Debug().callback(slashCommandInteraction);
+                System.out.println("Debug command run");
+//                new Debug().callback(slashCommandInteraction);
             }
 //            if (name.equals("ping")) {
 //                pingHandler.callback(slashCommandInteraction);

@@ -1,9 +1,8 @@
 package org.uaesports.bot.commands;
 
-import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
 import org.uaesports.bot.managers.cmds.*;
+import org.uaesports.bot.managers.cmds.annotations.*;
 
 import java.util.Optional;
 
