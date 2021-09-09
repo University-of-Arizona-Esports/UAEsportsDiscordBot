@@ -2,25 +2,20 @@ package org.uaesports.bot;
 
 import org.uaesports.bot.managers.cmds.Choice;
 
-public enum TestOptions implements Choice<Integer> {
+public enum TestOptions implements Choice {
     
-    OP_A(5),
-    OP_B(9);
+    OP_A("Option A"),
+    OP_B("Option B");
     
-    private int value;
+    private String name;
     
-    TestOptions(int i) {
-        value = i;
+    TestOptions(String name) {
+        this.name = name;
     }
-    
     
     @Override
     public String getName() {
         return name();
     }
     
-    @Override
-    public Integer getValue() {
-        return value;
-    }
 }

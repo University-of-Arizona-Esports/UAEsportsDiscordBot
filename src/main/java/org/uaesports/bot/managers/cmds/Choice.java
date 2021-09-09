@@ -1,9 +1,14 @@
 package org.uaesports.bot.managers.cmds;
 
-public interface Choice<T> {
+/**
+ * Used on an enum to make a predefined set of choices as a parameter.
+ */
+public interface Choice {
     
     String getName();
     
-    T getValue();
+    default int getValue() {
+        return ((Enum<?>) this).ordinal();
+    }
     
 }

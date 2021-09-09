@@ -1,7 +1,10 @@
 package org.uaesports.bot.commands;
 
+import org.javacord.api.entity.message.MessageDecoration;
+import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.uaesports.bot.managers.cmds.*;
+import org.uaesports.bot.managers.cmds.Command;
 import org.uaesports.bot.managers.cmds.annotations.*;
 
 import java.util.Optional;
@@ -10,17 +13,53 @@ import java.util.Optional;
 @Description("The debug command")
 public class Debug extends Command {
     
-    public Debug() { }
+    @Execute
+    @Subcommand(name = "ping", description = "Debug ping command")
+    @Param(index = 0, name = "user", description = "Specific user to pong")
+    public void ping(SlashCommandInteraction sci, Optional<User> user) {
+        var response = sci.createImmediateResponder()
+                      .append("Pong");
+        user.ifPresent(u -> response.append(" ").append(u));
+        response.respond();
+    }
     
     @Execute
-    @Subcommand(name = "get", description = "Gets something")
-    @Param(index = 0, name = "a", description = "A")
-    @Param(index = 1, name = "b", description = "B")
-    public void callback(SlashCommandInteraction sci, int a, Optional<Integer> b) {
-        var msg = sci.createImmediateResponder()
-                     .append("You typed ").append(a);
-        b.ifPresent(i -> msg.append(" and " + b));
-        msg.respond();
+    @Subcommand(name = "private", description = "Send a message visible only the command user sees.")
+    public void privateMessage(SlashCommandInteraction sci) {
+        sci.createImmediateResponder()
+                .setFlags(MessageFlag.EPHEMERAL)
+                .append("Private message uwu")
+                .respond();
+    }
+    
+    @Execute
+    @Subcommand(name = "poke", description = "Poke someone")
+    @Param(index = 0, name = "user", description = "Who to poke")
+    @Param(index = 1, name = "times", description = "How many times to poke?")
+    public void poke(SlashCommandInteraction sci, User user, Optional<Integer> times) {
+        if (times.isPresent()) {
+            if (times.get() == 0) {
+                sci.createImmediateResponder()
+                        .setFlags(MessageFlag.EPHEMERAL)
+                        .append("Nothing happened...", MessageDecoration.ITALICS)
+                        .respond();
+                return;
+            }
+            else if (times.get() < 0) {
+                sci.createImmediateResponder()
+                   .setFlags(MessageFlag.EPHEMERAL)
+                   .append("You can't poke that many times.")
+                   .respond();
+                return;
+            }
+        }
+        var response = sci.createImmediateResponder()
+                .append("Poke ").append(user);
+        times.ifPresent(i -> {
+            response.append(" " + i + " time");
+            if (i != 1) response.append("s");
+        });
+        response.respond();
     }
     
 }

@@ -5,8 +5,7 @@ import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.uaesports.bot.commands.Debug;
-import org.uaesports.bot.commands.Ping;
-import org.uaesports.bot.commands.Test;
+import org.uaesports.bot.managers.cmds.CommandManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,22 +27,13 @@ public class Main {
         for (SlashCommand command : commands) {
             System.out.println(command.getName());
         }
-
-        var pingHandler = new Ping();
-        var testHandler = new Test();
-
+        
+        var manager = new CommandManager();
+        manager.add(new Debug());
+    
         api.addSlashCommandCreateListener(event -> {
-            SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
-            var name = slashCommandInteraction.getCommandName();
-            if (name.equals("debug")) {
-                System.out.println("Debug command run");
-//                new Debug().callback(slashCommandInteraction);
-            }
-//            if (name.equals("ping")) {
-//                pingHandler.callback(slashCommandInteraction);
-//            } else if (name.equals("test")) {
-//                testHandler.callback(slashCommandInteraction);
-//            }
+            SlashCommandInteraction sci = event.getSlashCommandInteraction();
+            manager.dispatch(sci);
         });
     }
 }

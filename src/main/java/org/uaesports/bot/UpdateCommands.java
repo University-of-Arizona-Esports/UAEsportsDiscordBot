@@ -2,10 +2,9 @@ package org.uaesports.bot;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandBuilder;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionType;
+import org.javacord.api.interaction.*;
+import org.uaesports.bot.commands.Debug;
+import org.uaesports.bot.managers.cmds.CommandData;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,32 +23,10 @@ public class UpdateCommands {
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(token)
                 .login().join();
-
-        // This is used for both creating and updating slash commands, making changes here will
-        // create new slash commands or modify existing ones if the descriptions are changed.
-        // NOTE: This may take some time to update on Discord's end, up to an hour or more.
-        api.bulkOverwriteGlobalSlashCommands(Arrays.asList(
-                //                new SlashCommandBuilder().setName("ping").setDescription("A very basic ping and pong interaction."),
-                //                new SlashCommandBuilder().setName("test").setDescription("Just testing the thing.")
-                new SlashCommandBuilder()
-                        .setName("debug")
-                        .setDescription("Debug command thing")
-                        .setOptions(Arrays.asList(SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND_GROUP, "get", "Get something",
-                                                                                       Arrays.asList(SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "a", "A command",
-                                                                                                                                          Arrays.asList(SlashCommandOption.create(SlashCommandOptionType.INTEGER, "x", "X"),
-                                                                                                                                                        SlashCommandOption.create(SlashCommandOptionType.INTEGER, "y", "Y"),
-                                                                                                                                                        SlashCommandOption.create(SlashCommandOptionType.INTEGER, "z", "Z"))),
-                                                                                                     SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "b", "B command",
-                                                                                                                                          Arrays.asList(SlashCommandOption.create(SlashCommandOptionType.INTEGER, "x", "X"),
-                                                                                                                                                        SlashCommandOption.create(SlashCommandOptionType.INTEGER, "y", "Y"),
-                                                                                                                                                        SlashCommandOption.create(SlashCommandOptionType.INTEGER, "z", "Z"))))),
-                                                  SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "set", "Set something",
-                                                                                       Arrays.asList(SlashCommandOption.create(SlashCommandOptionType.INTEGER, "a", "A"),
-                                                                                                     SlashCommandOption.create(SlashCommandOptionType.INTEGER, "b", "B"),
-                                                                                                     SlashCommandOption.create(SlashCommandOptionType.INTEGER, "c", "C"))),
-                                                  SlashCommandOption.create(SlashCommandOptionType.INTEGER, "d", "The D value uwu")))
-        )).join();
-    
+        
+        var debug = CommandData.read(Debug.class).buildSlashCommand();
+        
+        api.bulkOverwriteGlobalSlashCommands(Arrays.asList(debug)).join();
         api.disconnect();
     }
 }
