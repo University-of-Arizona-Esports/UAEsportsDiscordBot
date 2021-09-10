@@ -67,7 +67,7 @@ public class CommandData {
     
     // Add command to discord and update its permissions
     public CompletableFuture<ServerSlashCommandPermissions> overwriteAndUpdatePermissions(DiscordApi api) {
-        return addToDiscord(api).thenCompose(slashCommand -> updatePermissions(api));
+        return addToDiscord(api).thenCompose(slashCommand -> updatePermissions(api, slashCommand));
     }
     
     // Add a command to discord
@@ -86,8 +86,12 @@ public class CommandData {
     }
     
     public CompletableFuture<ServerSlashCommandPermissions> updatePermissions(DiscordApi api) {
-        var server = getServer(api).orElseThrow(() -> new IllegalArgumentException("Updating permissions requires @ForServer attribute."));
         var cmd = getCommand(api).orElseThrow(() -> new IllegalArgumentException("Command is not registered."));
+        return updatePermissions(api, cmd);
+    }
+    
+    public CompletableFuture<ServerSlashCommandPermissions> updatePermissions(DiscordApi api, SlashCommand command) {
+        var server = getServer(api).orElseThrow(() -> new IllegalArgumentException("Updating permissions requires @ForServer attribute."));
         var updater = new SlashCommandPermissionsUpdater(server);
         var hasPermissions = false;
         for (EnableRole enableRole : type.getAnnotationsByType(EnableRole.class)) {
@@ -98,7 +102,7 @@ public class CommandData {
             updater.addPermission(disableRole.value(), SlashCommandPermissionType.ROLE, false);
             hasPermissions = true;
         }
-        if (hasPermissions) return updater.update(cmd.getId());
+        if (hasPermissions) return updater.update(command.getId());
         else return CompletableFuture.completedFuture(null);
     }
     

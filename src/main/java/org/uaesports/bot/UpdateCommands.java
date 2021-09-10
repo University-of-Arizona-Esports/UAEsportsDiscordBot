@@ -25,7 +25,7 @@ public class UpdateCommands {
                 .setToken(token)
                 .login().join();
 
-        var debug = CommandData.read(Debug.class).buildSlashCommand();
+//        var debug = CommandData.read(Debug.class).buildSlashCommand();
 
         CommandData.read(Debug.class).overwriteAndUpdatePermissions(api).join();
 
