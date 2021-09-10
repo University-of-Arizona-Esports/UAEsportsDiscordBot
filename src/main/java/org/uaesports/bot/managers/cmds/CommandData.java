@@ -86,7 +86,7 @@ public class CommandData {
     }
     
     public CompletableFuture<ServerSlashCommandPermissions> updatePermissions(DiscordApi api) {
-        var server = getServer(api).orElseThrow(() -> new IllegalArgumentException("Updating permissions requires @Server attribute."));
+        var server = getServer(api).orElseThrow(() -> new IllegalArgumentException("Updating permissions requires @ForServer attribute."));
         var cmd = getCommand(api).orElseThrow(() -> new IllegalArgumentException("Command is not registered."));
         var updater = new SlashCommandPermissionsUpdater(server);
         var hasPermissions = false;
