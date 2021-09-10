@@ -1,4 +1,4 @@
-package org.uaesports.bot;
+package org.uaesports.bot.commands;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
