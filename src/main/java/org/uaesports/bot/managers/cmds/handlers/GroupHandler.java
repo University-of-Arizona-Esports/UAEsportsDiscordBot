@@ -33,7 +33,7 @@ public class GroupHandler implements NamedInteractionHandler {
                                                   .filter(h -> h.getName().equals(name))
                                                   .findFirst()
                                                   .get();
-        handler.handle(sci, provider, instance);
+        handler.handle(sci, this.name == null ? provider : option, instance);
     }
     
 }
