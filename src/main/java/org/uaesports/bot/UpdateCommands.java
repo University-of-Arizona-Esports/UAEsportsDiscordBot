@@ -5,8 +5,6 @@ import org.javacord.api.DiscordApiBuilder;
 import org.uaesports.bot.commands.Debug;
 import org.uaesports.bot.managers.cmds.CommandData;
 
-import java.util.Arrays;
-
 // Creates and updates all registered global slash commands for the given bot.
 // Only needs to be run once to register the commands, and then again to update the registered commands.
 // NOTE: New and Updated commands may take up to an hour for Discord to fully register them and make them available.
@@ -22,9 +20,8 @@ public class UpdateCommands {
                 .setToken(token)
                 .login().join();
         
-        var debug = CommandData.read(Debug.class).buildSlashCommand();
+        CommandData.read(Debug.class).overwriteAndUpdatePermissions(api).join();
         
-        api.bulkOverwriteGlobalSlashCommands(Arrays.asList(debug)).join();
         api.disconnect();
     }
 }
