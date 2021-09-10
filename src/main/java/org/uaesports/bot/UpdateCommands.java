@@ -2,12 +2,10 @@ package org.uaesports.bot;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.interaction.*;
 import org.uaesports.bot.commands.Debug;
 import org.uaesports.bot.managers.cmds.CommandData;
 
 import java.util.Arrays;
-import java.util.List;
 
 // Creates and updates all registered global slash commands for the given bot.
 // Only needs to be run once to register the commands, and then again to update the registered commands.
