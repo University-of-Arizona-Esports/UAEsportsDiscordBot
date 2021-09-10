@@ -89,13 +89,17 @@ public class CommandData {
         var server = getServer(api).orElseThrow(() -> new IllegalArgumentException("Updating permissions requires @Server attribute."));
         var cmd = getCommand(api).orElseThrow(() -> new IllegalArgumentException("Command is not registered."));
         var updater = new SlashCommandPermissionsUpdater(server);
+        var hasPermissions = false;
         for (EnableRole enableRole : type.getAnnotationsByType(EnableRole.class)) {
             updater.addPermission(enableRole.value(), SlashCommandPermissionType.ROLE, true);
+            hasPermissions = true;
         }
         for (DisableRole disableRole : type.getAnnotationsByType(DisableRole.class)) {
             updater.addPermission(disableRole.value(), SlashCommandPermissionType.ROLE, false);
+            hasPermissions = true;
         }
-        return updater.update(cmd.getId());
+        if (hasPermissions) return updater.update(cmd.getId());
+        else return CompletableFuture.completedFuture(null);
     }
     
     // Convert the command data into a slash command for discord.
