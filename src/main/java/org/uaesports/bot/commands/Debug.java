@@ -11,6 +11,9 @@ import java.util.Optional;
 
 @Name("debug")
 @Description("The debug command")
+@ForServer(737843314136449145L)
+@DefaultPermission(false)
+@EnableRole(737860544236748901L)
 public class Debug extends Command {
     @Execute
     @Subcommand(name = "ping", description = "Debug ping command")
