@@ -107,6 +107,10 @@ public class CommandData {
         var builder = new SlashCommandBuilder()
                 .setName(name)
                 .setDescription(description);
+        var defaultPermission = type.getAnnotation(DefaultPermission.class);
+        if (defaultPermission != null) {
+            builder.setDefaultPermission(defaultPermission.value());
+        }
         // Special case: Executing the base command
         if (options.size() == 1 && options.get(0).name() == null) {
             for (Option option : ((SubcommandOption) options.get(0)).options()) {
