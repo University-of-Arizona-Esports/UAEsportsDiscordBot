@@ -6,10 +6,14 @@ import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
+import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.SlashCommandInteractionOptionsProvider;
 import org.uaesports.bot.managers.cmds.handlers.InteractionHandler;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 
 public abstract class Command {
     
@@ -32,7 +36,7 @@ public abstract class Command {
     
     // Get the specific param from the command assuming that it exists
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public static Object getParam(SlashCommandInteractionOptionsProvider provider, ParamInfo info) {
+    public static Object getParam(SlashCommandInteractionOptionsProvider provider, ParamInfo info) throws ExecutionException, InterruptedException {
         if (provider == null) return Optional.empty();
         var option = provider.getOptionByName(info.name());
         // If empty then the param is not required and was left out
@@ -44,10 +48,10 @@ public abstract class Command {
         if (type == String.class) o = value.getStringValue().get();
         else if (type == int.class || type == Integer.class) o = value.getIntValue().get();
         else if (type == boolean.class || type == Boolean.class) o = value.getBooleanValue().get();
-        else if (type == User.class) o = value.getUserValue().get();
+        else if (type == User.class) o = value.requestUserValue().get().get();
         else if (type == ServerChannel.class) o = value.getChannelValue().get();
         else if (type == Role.class) o = value.getRoleValue().get();
-        else if (type == Mentionable.class) o = value.getMentionableValue().get();
+        else if (type == Mentionable.class) o = value.requestMentionableValue().get().get();
         else if (Choice.class.isAssignableFrom(type)) {
             // Get corresponding enum
             var index = value.getIntValue().get();

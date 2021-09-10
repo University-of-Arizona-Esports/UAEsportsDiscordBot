@@ -7,6 +7,7 @@ import org.uaesports.bot.managers.cmds.ParamInfo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The part of a command handler that executes the command itself.
@@ -26,13 +27,15 @@ public class CommandAction implements InteractionHandler {
     public void handle(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, Object instance) {
         var args = new Object[params.length + 1];
         args[0] = sci;
-        for (var i = 0; i < params.length; i++) {
-            args[i + 1] = Command.getParam(provider, params[i]);
-        }
         try {
+            for (var i = 0; i < params.length; i++) {
+                args[i + 1] = Command.getParam(provider, params[i]);
+            }
             method.invoke(instance, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            // TODO log/notify that there was an error
+            // TODO this shouldn't happen but we can still log it
+        } catch (ExecutionException | InterruptedException e) {
+            // Failed to request data from discord, let the interaction fail
         }
     }
     
