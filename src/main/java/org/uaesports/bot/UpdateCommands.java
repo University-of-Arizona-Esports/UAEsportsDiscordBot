@@ -2,8 +2,8 @@ package org.uaesports.bot;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.interaction.SlashCommandBuilder;
-import org.javacord.api.interaction.SlashCommandUpdater;
+import org.uaesports.bot.commands.Debug;
+import org.uaesports.bot.managers.cmds.CommandData;
 
 import java.util.Arrays;
 
@@ -21,21 +21,10 @@ public class UpdateCommands {
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(token)
                 .login().join();
-
-        // This is used for both creating and updating slash commands, making changes here will
-        // create new slash commands or modify existing ones if the descriptions are changed.
-        // NOTE: This may take some time to update on Discord's end, up to an hour or more.
-        api.bulkOverwriteGlobalSlashCommands(Arrays.asList(
-                new SlashCommandBuilder().setName("ping").setDescription("A very basic ping and pong interaction."),
-                new SlashCommandBuilder().setName("roles").setDescription("See available roles to assign to yourself.")
-        )).join();
-
-
-        // This listing of what Discord has registered as the commands *will* update instantly.
-        // However, Discord itself (the user side), may take up to an hour to update.
-        var commands = api.getGlobalSlashCommands().join();
-        for (var command : commands) {
-            System.out.println(command.getName());
-        }
+        
+        var debug = CommandData.read(Debug.class).buildSlashCommand();
+        
+        api.bulkOverwriteGlobalSlashCommands(Arrays.asList(debug)).join();
+        api.disconnect();
     }
 }
