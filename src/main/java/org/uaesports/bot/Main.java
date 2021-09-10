@@ -5,6 +5,9 @@ import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.uaesports.bot.commands.Debug;
+import org.uaesports.bot.commands.ExtraRoles;
+import org.uaesports.bot.commands.Ping;
+import org.uaesports.bot.commands.Test;
 import org.uaesports.bot.managers.cmds.CommandManager;
 
 public class Main {
@@ -30,28 +33,13 @@ public class Main {
         
         var manager = new CommandManager();
         manager.add(new Debug());
+        manager.add(new Ping(api));
+        manager.add(new Test());
+        manager.add(new ExtraRoles());
     
         api.addSlashCommandCreateListener(event -> {
             SlashCommandInteraction sci = event.getSlashCommandInteraction();
             manager.dispatch(sci);
         });
-    }
-
-    public static String getCommandSignature(SlashCommandInteraction interaction) {
-        StringBuilder signature = new StringBuilder(interaction.getCommandName());
-
-        var options = interaction.getOptions();
-        while (options.size() == 1) {
-            var option = options.get(0);
-            if (options.get(0).isSubcommandOrGroup()) {
-                signature.append(" ").append(option.getName());
-                options = option.getOptions();
-            } else {
-                return signature.toString();
-            }
-        }
-
-
-        return signature.toString();
     }
 }

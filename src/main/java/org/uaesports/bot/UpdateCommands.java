@@ -3,6 +3,9 @@ package org.uaesports.bot;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.uaesports.bot.commands.Debug;
+import org.uaesports.bot.commands.ExtraRoles;
+import org.uaesports.bot.commands.Ping;
+import org.uaesports.bot.commands.Test;
 import org.uaesports.bot.managers.cmds.CommandData;
 
 import java.util.Arrays;
@@ -23,8 +26,14 @@ public class UpdateCommands {
                 .login().join();
         
         var debug = CommandData.read(Debug.class).buildSlashCommand();
+        var ping = CommandData.read(Ping.class).buildSlashCommand();
+        var test = CommandData.read(Test.class).buildSlashCommand();
+        var extraRoles = CommandData.read(ExtraRoles.class).buildSlashCommand();
         
-        api.bulkOverwriteGlobalSlashCommands(Arrays.asList(debug)).join();
+        api.bulkOverwriteGlobalSlashCommands(Arrays.asList(
+                debug, ping, test, extraRoles
+        )).join();
+
         api.disconnect();
     }
 }
