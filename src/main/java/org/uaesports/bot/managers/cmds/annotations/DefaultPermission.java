@@ -6,11 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Make a command a subcommand
+ * The default permission for a command
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Subcommand {
-    String name();
-    String description();
+@Target(ElementType.TYPE)
+public @interface DefaultPermission {
+    boolean value();
 }

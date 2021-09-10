@@ -12,10 +12,10 @@ import java.util.Optional;
 @Name("debug")
 @Description("The debug command")
 public class Debug extends Command {
-    
     @Execute
     @Subcommand(name = "ping", description = "Debug ping command")
     @Param(index = 0, name = "user", description = "Specific user to pong")
+
     public void ping(SlashCommandInteraction sci, Optional<User> user) {
         var response = sci.createImmediateResponder()
                       .append("Pong");

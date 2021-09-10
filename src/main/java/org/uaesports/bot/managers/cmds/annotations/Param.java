@@ -1,14 +1,13 @@
 package org.uaesports.bot.managers.cmds.annotations;
 
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.*;
 
 /**
  * Holds info for a command parameter
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(Params.class)
+@Target(ElementType.METHOD)
 public @interface Param {
     int index();
     String name();

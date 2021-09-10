@@ -6,11 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Make a command a subcommand
+ * Collection of disabled roles
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Subcommand {
-    String name();
-    String description();
+@Target(ElementType.TYPE)
+public @interface DisabledRoles {
+    DisableRole[] value();
 }

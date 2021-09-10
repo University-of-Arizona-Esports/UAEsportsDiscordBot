@@ -24,16 +24,16 @@ public class UpdateCommands {
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(token)
                 .login().join();
-        
-        var debug = CommandData.read(Debug.class).buildSlashCommand();
+
+        CommandData.read(Debug.class).overwriteAndUpdatePermissions(api).join();
+
         var ping = CommandData.read(Ping.class).buildSlashCommand();
         var test = CommandData.read(Test.class).buildSlashCommand();
         var extraRoles = CommandData.read(ExtraRoles.class).buildSlashCommand();
         
         api.bulkOverwriteGlobalSlashCommands(Arrays.asList(
-                debug, ping, test, extraRoles
+                ping, test, extraRoles
         )).join();
-
         api.disconnect();
     }
 }
