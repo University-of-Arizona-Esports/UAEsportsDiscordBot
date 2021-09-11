@@ -12,6 +12,7 @@ import org.uaesports.bot.managers.cmds.handlers.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -24,6 +25,8 @@ public class CommandData {
     private String name;
     private String description;
     private List<Option> options;
+    
+    private Map<Type, ParamReader> customParams;
     
     private CommandData() {
         options = new ArrayList<>();
@@ -39,6 +42,11 @@ public class CommandData {
     
     public List<Option> getOptions() {
         return options;
+    }
+    
+    private Map<Type, ParamReader> getCustomParams() {
+        if (customParams != null) return customParams;
+        return customParams = new HashMap<>();
     }
     
     public boolean isGlobal() {
@@ -173,7 +181,14 @@ public class CommandData {
         return sub.options()
                   .stream()
                   .map(Parameter.class::cast)
-                  .map(parameter -> new ParamInfo(parameter.name(), parameter.paramType(), parameter.required()))
+                  .map(parameter -> {
+                      if (parameter.reader() != null) {
+                          return new CustomParamInfo(parameter.name(), parameter.paramType(), parameter.required(), parameter.reader());
+                      }
+                      else {
+                          return new ParamInfo(parameter.name(), parameter.paramType(), parameter.required());
+                      }
+                  })
                   .toArray(ParamInfo[]::new);
     }
     
@@ -181,6 +196,7 @@ public class CommandData {
     public static CommandData read(Class<? extends Command> type) {
         var data = new CommandData();
         data.type = type;
+        readCustomParameters(data, type);
         Name name = type.getAnnotation(Name.class);
         if (name == null) throw new IllegalArgumentException("Command is missing @Name attribute.");
         Description description = type.getAnnotation(Description.class);
@@ -198,7 +214,7 @@ public class CommandData {
     private static void readMethod(CommandData data, Method method) {
         var group = method.getAnnotation(Group.class);
         var subcommand = method.getAnnotation(Subcommand.class);
-        var params = readParameters(method);
+        var params = readParameters(data, method);
         // Group -> Subcommand
         if (group != null) {
             if (subcommand == null)
@@ -235,7 +251,7 @@ public class CommandData {
     }
     
     // Read the method's parameter list into an option list
-    private static List<Option> readParameters(Method method) {
+    private static List<Option> readParameters(CommandData data, Method method) {
         var types = method.getParameterTypes();
         if (types.length < 1 || types[0] != SlashCommandInteraction.class) {
             throw new IllegalArgumentException("First parameter of method must be SlashCommandInteraction.");
@@ -260,14 +276,40 @@ public class CommandData {
             }
             // Check if the type is valid
             var paramClass = optional ? ((ParameterizedType) paramTypes[i]).getActualTypeArguments()[0] : paramTypes[i];
-            if (!(paramClass instanceof Class c) || Parameter.getType(c) == null)
-                throw new IllegalArgumentException("Parameter " + i + " is an invalid type.");
-            if (c.isEnum() && c.getEnumConstants().length > 25) {
+            if (!(paramClass instanceof Class c) || Parameter.getType(c) == null) {
+                var customs = data.getCustomParams();
+                if (!customs.containsKey(paramClass)) throw new IllegalArgumentException("Custom parameter type not defined: " + paramClass.getTypeName());
+                var customParam = customs.get(paramClass);
+                result.add(new Parameter(info.name(), info.description(), !optional, customParam.getDiscordType(), customParam.getMethod()));
+            }
+            else if (c.isEnum() && c.getEnumConstants().length > 25) {
                 throw new IllegalArgumentException("Choices may have up to 25 options.");
             }
-            result.add(new Parameter(info.name(), info.description(), !optional, c));
+            else {
+                result.add(new Parameter(info.name(), info.description(), !optional, c, null));
+            }
         }
         return result;
+    }
+    
+    private static void readCustomParameters(CommandData data, Class<?> type) {
+        Arrays.stream(type.getDeclaredMethods())
+              .filter(method -> method.isAnnotationPresent(CustomParam.class))
+              .forEach(method -> addCustomParam(data, method));
+    }
+    
+    private static void addCustomParam(CommandData data, Method method) {
+        var customs = data.getCustomParams();
+        var params = method.getGenericParameterTypes();
+        if (params.length != 1) throw new IllegalArgumentException("Custom parameter parser should have a single argument.");
+        var input = params[0];
+        if (!(input instanceof Class<?> c) || Parameter.getType(c) == null) {
+            throw new IllegalArgumentException("Custom parameter input should be an existing Discord parameter type.");
+        }
+        var output = method.getGenericReturnType();
+        if (output == Void.class) throw new IllegalArgumentException("Custom parameter parser cannot return void");
+        if (customs.containsKey(output)) throw new IllegalArgumentException("Duplicate custom parameter type " + output.getTypeName());
+        customs.put(output, new ParamReader(c, output, method));
     }
     
     /**
@@ -331,7 +373,7 @@ public class CommandData {
      * @param paramType The real type of the parameter. If the parameter is Optional&lt;String&gt;,
      * this value should be String. For a choice parameter, this is the enum type.
      */
-    public record Parameter(String name, String description, boolean required, Class<?> paramType) implements Option {
+    public record Parameter(String name, String description, boolean required, Class<?> paramType, Method reader) implements Option {
         
         /**
          * Assuming the type is a choice (enum), get all the values.

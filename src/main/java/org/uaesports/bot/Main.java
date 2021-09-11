@@ -4,10 +4,7 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.uaesports.bot.commands.Debug;
-import org.uaesports.bot.commands.ExtraRoles;
-import org.uaesports.bot.commands.Ping;
-import org.uaesports.bot.commands.Test;
+import org.uaesports.bot.commands.*;
 import org.uaesports.bot.managers.cmds.CommandManager;
 
 public class Main {
@@ -36,6 +33,7 @@ public class Main {
         manager.add(new Ping(api));
         manager.add(new Test());
         manager.add(new ExtraRoles());
+        manager.add(new Custom());
     
         api.addSlashCommandCreateListener(event -> {
             SlashCommandInteraction sci = event.getSlashCommandInteraction();

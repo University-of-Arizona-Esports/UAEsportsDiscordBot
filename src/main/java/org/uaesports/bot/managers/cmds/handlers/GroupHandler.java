@@ -2,6 +2,7 @@ package org.uaesports.bot.managers.cmds.handlers;
 
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOptionsProvider;
+import org.uaesports.bot.managers.cmds.Command;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class GroupHandler implements NamedInteractionHandler {
     
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
-    public void handle(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, Object instance) {
+    public void handle(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, Command instance) {
         var option = provider.getFirstOption().get();
         var name = option.getName();
         NamedInteractionHandler handler = handlers.stream()

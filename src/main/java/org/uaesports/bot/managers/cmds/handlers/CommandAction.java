@@ -24,18 +24,23 @@ public class CommandAction implements InteractionHandler {
     }
     
     @Override
-    public void handle(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, Object instance) {
+    public void handle(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, Command instance) {
         var args = new Object[params.length + 1];
         args[0] = sci;
+        var i = 0;
         try {
-            for (var i = 0; i < params.length; i++) {
-                args[i + 1] = Command.getParam(provider, params[i]);
+            for (i = 0; i < params.length; i++) {
+                args[i + 1] = params[i].getValue(provider, instance);
             }
+        } catch (ExecutionException | IllegalAccessException | InterruptedException e) {
+            // Failed to request data from discord, let the interaction fail
+        } catch (InvocationTargetException e) {
+            instance.onInvalidParameter(sci, provider, params[i].name());
+        }
+        try {
             method.invoke(instance, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            // TODO this shouldn't happen but we can still log it
-        } catch (ExecutionException | InterruptedException e) {
-            // Failed to request data from discord, let the interaction fail
+            // TODO this should only occur if our method throws an exception
         }
     }
     
