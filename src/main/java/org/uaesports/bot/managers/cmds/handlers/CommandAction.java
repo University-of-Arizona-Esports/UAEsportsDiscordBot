@@ -35,7 +35,7 @@ public class CommandAction implements InteractionHandler {
         } catch (ExecutionException | IllegalAccessException | InterruptedException e) {
             // Failed to request data from discord, let the interaction fail
         } catch (InvocationTargetException e) {
-            instance.onInvalidParameter(sci, provider, params[i].name());
+            instance.onInvalidParameter(sci, provider, params[i].name(), e.getCause());
         }
         try {
             method.invoke(instance, args);

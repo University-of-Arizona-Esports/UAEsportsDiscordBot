@@ -18,7 +18,7 @@ public class Custom extends Command {
     }
     
     @Override
-    public void onInvalidParameter(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, String paramName) {
+    public void onInvalidParameter(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, String paramName, Throwable cause) {
         sci.createImmediateResponder()
            .append("Invalid format for parameter ").append(paramName)
            .respond();
