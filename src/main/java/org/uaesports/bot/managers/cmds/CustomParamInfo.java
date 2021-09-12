@@ -7,6 +7,9 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * A {@link ParamInfo} that maps a parameter to a custom type using a conversion method.
+ */
 public class CustomParamInfo extends ParamInfo {
     
     private Method method;
@@ -24,6 +27,7 @@ public class CustomParamInfo extends ParamInfo {
     public Object getValue(SlashCommandInteractionOptionsProvider provider, Object instance)
             throws ExecutionException, InterruptedException, InvocationTargetException, IllegalAccessException {
         var discordValue = super.getValue(provider, instance);
+        // If this is an optional parameter, place the converted value in an Optional.
         if (discordValue instanceof Optional o) {
             if (o.isPresent()) return Optional.ofNullable(method.invoke(instance, o.get()));
             return o;

@@ -15,6 +15,11 @@ public class GroupHandler implements NamedInteractionHandler {
     private String name;
     private List<NamedInteractionHandler> handlers;
     
+    /**
+     * @param name Name of this group.
+     * @param handlers If this is the root handler, List of Groups/Subcommands on the base command.
+     * If this is a command group, List of subcommands.
+     */
     public GroupHandler(String name, List<NamedInteractionHandler> handlers) {
         this.name = name;
         this.handlers = handlers;
@@ -34,6 +39,8 @@ public class GroupHandler implements NamedInteractionHandler {
                                                   .filter(h -> h.getName().equals(name))
                                                   .findFirst()
                                                   .get();
+        // If this is the root group, pass the provider along.
+        // If this is a real command group, provide the subcommand.
         handler.handle(sci, this.name == null ? provider : option, instance);
     }
     

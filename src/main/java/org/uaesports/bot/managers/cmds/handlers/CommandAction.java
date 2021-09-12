@@ -18,6 +18,11 @@ public class CommandAction implements InteractionHandler {
     private Method method;
     private ParamInfo[] params;
     
+    /**
+     * @param method Method that gets execute to handle this command.
+     * @param params Array that holds information of how to fetch parameters
+     * from an interaction.
+     */
     public CommandAction(Method method, ParamInfo[] params) {
         this.method = method;
         this.params = params;
