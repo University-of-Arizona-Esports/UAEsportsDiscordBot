@@ -13,7 +13,7 @@ public class ComponentManager {
     private Map<String, ComponentMethod> handlers = new HashMap<>();
     
     /**
-     * Adds add handler methods from a component handler instance.
+     * Adds all handler methods from a component handler instance.
      */
     public void add(ComponentHandler handler) {
         handler.getMethods().forEach((id, method) -> {
