@@ -2,10 +2,13 @@ package org.uaesports.bot;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.uaesports.bot.commands.*;
+import org.uaesports.bot.components.TestComponent;
 import org.uaesports.bot.managers.cmds.CommandManager;
+import org.uaesports.bot.managers.components.ComponentManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,15 +32,27 @@ public class Main {
         }
         
         var manager = new CommandManager();
+        
         manager.add(new Debug());
         manager.add(new Ping(api));
         manager.add(new Test());
         manager.add(new ExtraRoles());
-        manager.add(new Custom());
+        var custom = new Custom();
+        manager.add(custom);
+        
+        var components = new ComponentManager();
+        
+        var testComponents = new TestComponent();
+        custom.setComponents(testComponents.getComponents().toArray(new HighLevelComponent[0]));
+        components.add(testComponents);
     
         api.addSlashCommandCreateListener(event -> {
             SlashCommandInteraction sci = event.getSlashCommandInteraction();
             manager.dispatch(sci);
+        });
+        api.addMessageComponentCreateListener(event -> {
+            var interaction = event.getMessageComponentInteraction();
+            components.handle(interaction);
         });
     }
 }

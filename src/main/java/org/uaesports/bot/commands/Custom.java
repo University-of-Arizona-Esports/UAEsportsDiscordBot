@@ -1,34 +1,31 @@
 package org.uaesports.bot.commands;
 
+import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.SlashCommandInteractionOptionsProvider;
 import org.uaesports.bot.managers.cmds.Command;
-import org.uaesports.bot.managers.cmds.annotations.*;
-
-import java.util.Arrays;
-import java.util.List;
+import org.uaesports.bot.managers.cmds.annotations.Description;
+import org.uaesports.bot.managers.cmds.annotations.Execute;
+import org.uaesports.bot.managers.cmds.annotations.Name;
 
 @Name("custom")
 @Description("Command that uses custom parameters")
 public class Custom extends Command {
     
-    @CustomParam
-    public List<Integer> readList(String s) {
-        return Arrays.stream(s.split(", *")).map(Integer::parseInt).toList();
+    private HighLevelComponent[] components;
+    
+    public HighLevelComponent[] getComponents() {
+        return components;
     }
     
-    @Override
-    public void onInvalidParameter(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, String paramName, Throwable cause) {
-        sci.createImmediateResponder()
-           .append("Invalid format for parameter ").append(paramName)
-           .respond();
+    public void setComponents(HighLevelComponent[] components) {
+        this.components = components;
     }
     
     @Execute
-    @Param(index = 0, name = "numbers", description = "Comma separated numbers")
-    public void call(SlashCommandInteraction sci, List<Integer> args) {
+    public void call(SlashCommandInteraction sci) {
         sci.createImmediateResponder()
-                .append("Sum: ").append(args.stream().mapToInt(value -> value).sum())
+                .append("Test these buttons")
+                .addComponents(components)
                 .respond();
     }
     
