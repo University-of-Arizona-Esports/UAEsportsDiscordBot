@@ -29,7 +29,7 @@ public class UpdateCommands {
 
         CommandData.read(Debug.class).overwriteAndUpdatePermissions(api).join();
 
-        var ping = CommandData.read(Ping.class).buildSlashCommand();
+        var ping = CommandData.read(Ping.class).buildSlashCommand(); 
         var test = CommandData.read(Test.class).buildSlashCommand();
         var extraRoles = CommandData.read(ExtraRoles.class).buildSlashCommand();
         
