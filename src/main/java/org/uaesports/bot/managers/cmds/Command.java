@@ -4,16 +4,12 @@ import org.javacord.api.entity.Mentionable;
 import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.user.User;
-import org.javacord.api.interaction.SlashCommandBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.SlashCommandInteractionOptionsProvider;
 import org.uaesports.bot.managers.cmds.handlers.InteractionHandler;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
 
 public abstract class Command {
     
@@ -26,13 +22,22 @@ public abstract class Command {
         handler = data.buildHandler();
     }
     
-    public String getName() {
+    public final String getName() {
         return name;
     }
     
-    public void handleInteraction(SlashCommandInteraction sci) {
+    public final void handleInteraction(SlashCommandInteraction sci) {
         handler.handle(sci, sci, this);
     }
+    
+    /**
+     * Called when an exception occurs while parsing a parameter.
+     * @param sci Interaction object.
+     * @param provider Option for the current command (use one of the getByName methods with paramName on this object to get parameter values)
+     * @param paramName Name of the parameter that failed.
+     * @param cause The exception that was thrown while parsing the parameter.
+     */
+    public void onInvalidParameter(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, String paramName, Throwable cause) { }
     
     // Get the specific param from the command assuming that it exists
     @SuppressWarnings("OptionalGetWithoutIsPresent")

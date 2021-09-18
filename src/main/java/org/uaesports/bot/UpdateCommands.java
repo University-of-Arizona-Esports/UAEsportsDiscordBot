@@ -2,10 +2,7 @@ package org.uaesports.bot;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.uaesports.bot.commands.Debug;
-import org.uaesports.bot.commands.ExtraRoles;
-import org.uaesports.bot.commands.Ping;
-import org.uaesports.bot.commands.Test;
+import org.uaesports.bot.commands.*;
 import org.uaesports.bot.managers.cmds.CommandData;
 
 import java.util.Arrays;
@@ -25,16 +22,17 @@ public class UpdateCommands {
                 .setToken(token)
                 .login().join();
 
-        var debug = CommandData.read(Debug.class).buildSlashCommand();
+//        var debug = CommandData.read(Debug.class).buildSlashCommand();
 
         CommandData.read(Debug.class).overwriteAndUpdatePermissions(api).join();
 
         var ping = CommandData.read(Ping.class).buildSlashCommand(); 
         var test = CommandData.read(Test.class).buildSlashCommand();
         var extraRoles = CommandData.read(ExtraRoles.class).buildSlashCommand();
+        var custom = CommandData.read(Custom.class).buildSlashCommand();
         
         api.bulkOverwriteGlobalSlashCommands(Arrays.asList(
-                ping, test, extraRoles
+                ping, test, extraRoles, custom
         )).join();
         api.disconnect();
     }
