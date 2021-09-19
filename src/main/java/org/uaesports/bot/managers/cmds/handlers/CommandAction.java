@@ -2,7 +2,7 @@ package org.uaesports.bot.managers.cmds.handlers;
 
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOptionsProvider;
-import org.uaesports.bot.managers.cmds.Command;
+import org.uaesports.bot.managers.cmds.CommandHandler;
 import org.uaesports.bot.managers.cmds.ParamInfo;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +29,7 @@ public class CommandAction implements InteractionHandler {
     }
     
     @Override
-    public void handle(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, Command instance) {
+    public void handle(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, CommandHandler instance) {
         var args = new Object[params.length + 1];
         args[0] = sci;
         var i = 0;

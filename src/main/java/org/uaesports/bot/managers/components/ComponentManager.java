@@ -15,7 +15,7 @@ public class ComponentManager {
     /**
      * Adds all handler methods from a component handler instance.
      */
-    public void add(ComponentHandler handler) {
+    public void add(ComponentGroup handler) {
         handler.getMethods().forEach((id, method) -> {
             if (handlers.containsKey(id)) {
                 throw new IllegalStateException("Duplicate handler for component id: " + id);

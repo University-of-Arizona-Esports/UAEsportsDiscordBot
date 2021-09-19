@@ -193,7 +193,7 @@ public class CommandData {
     }
     
     // Read the annotations from a command class into an object
-    public static CommandData read(Class<? extends Command> type) {
+    public static CommandData read(Class<? extends CommandHandler> type) {
         var data = new CommandData();
         data.type = type;
         readCustomParameters(data, type);

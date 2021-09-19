@@ -11,7 +11,7 @@ import org.uaesports.bot.managers.cmds.handlers.InteractionHandler;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-public abstract class Command {
+public abstract class Command implements CommandHandler {
     
     private String name;
     private InteractionHandler handler;
@@ -22,22 +22,32 @@ public abstract class Command {
         handler = data.buildHandler();
     }
     
+    protected Command(boolean unused) {
+        // This constructor is used to skip reading command data.
+    }
+    
+    protected final void setName(String name) {
+        this.name = name;
+    }
+    
+    protected final void setHandler(InteractionHandler handler) {
+        this.handler = handler;
+    }
+    
     public final String getName() {
         return name;
     }
     
     public final void handleInteraction(SlashCommandInteraction sci) {
-        handler.handle(sci, sci, this);
+        handler.handle(sci, sci, getHandlerInstance());
     }
     
     /**
-     * Called when an exception occurs while parsing a parameter.
-     * @param sci Interaction object.
-     * @param provider Option for the current command (use one of the getByName methods with paramName on this object to get parameter values)
-     * @param paramName Name of the parameter that failed.
-     * @param cause The exception that was thrown while parsing the parameter.
+     * Get the instance that handler methods will be called on.
      */
-    public void onInvalidParameter(SlashCommandInteraction sci, SlashCommandInteractionOptionsProvider provider, String paramName, Throwable cause) { }
+    public CommandHandler getHandlerInstance() {
+        return this;
+    }
     
     // Get the specific param from the command assuming that it exists
     @SuppressWarnings("OptionalGetWithoutIsPresent")
