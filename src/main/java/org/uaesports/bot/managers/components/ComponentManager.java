@@ -24,6 +24,10 @@ public class ComponentManager {
         });
     }
     
+    public void add(ComponentHandler handler) {
+        add(new ComponentGroup(handler));
+    }
+    
     /**
      * Dispatch an interaction to the associated handler method.
      */

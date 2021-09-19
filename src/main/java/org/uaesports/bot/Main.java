@@ -10,8 +10,6 @@ import org.uaesports.bot.commands.Ping;
 import org.uaesports.bot.commands.Test;
 import org.uaesports.bot.components.CustomCmdAndComponents;
 import org.uaesports.bot.managers.cmds.CommandManager;
-import org.uaesports.bot.managers.cmds.ExternalCommand;
-import org.uaesports.bot.managers.components.ComponentGroup;
 import org.uaesports.bot.managers.components.ComponentManager;
 
 public class Main {
@@ -38,16 +36,14 @@ public class Main {
         var commandAndComponent = new CustomCmdAndComponents();
         
         var manager = new CommandManager();
-        
         manager.add(new Debug());
         manager.add(new Ping(api));
         manager.add(new Test());
         manager.add(new ExtraRoles());
-        manager.add(new ExternalCommand(commandAndComponent));
+        manager.add(commandAndComponent);
         
         var components = new ComponentManager();
-        
-        components.add(new ComponentGroup(commandAndComponent));
+        components.add(commandAndComponent);
     
         api.addSlashCommandCreateListener(event -> {
             SlashCommandInteraction sci = event.getSlashCommandInteraction();

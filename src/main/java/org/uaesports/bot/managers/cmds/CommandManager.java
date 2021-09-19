@@ -13,6 +13,10 @@ public class CommandManager {
         commands.put(command.getName(), command);
     }
     
+    public void add(CommandHandler handler) {
+        add(new ExternalCommand(handler));
+    }
+    
     public void dispatch(SlashCommandInteraction sci) {
         var command = commands.getOrDefault(sci.getCommandName(), null);
         if (command == null) return; // Executed command we don't have a handler for
